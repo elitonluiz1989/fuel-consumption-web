@@ -1,6 +1,12 @@
+<script setup lang="ts">
+import FuelConsumption from "@/components/fuel-consumption/fuel-consumption.vue";
+</script>
+
 <template>
   <div class="row justify-content-center">
-    <div class="content col-11 rounded"></div>
+    <div class="content col-11">
+      <FuelConsumption />
+    </div>
   </div>
 </template>
 
@@ -9,6 +15,5 @@
 
 .content {
   min-height: 25rem;
-  background-color: $gray;
 }
 </style>

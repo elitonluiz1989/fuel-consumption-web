@@ -14,6 +14,6 @@ const appTitle = "Fuel Consumption";
 @import "@/assets/scss/_variables.scss";
 
 .header__title {
-  color: $gray;
+  color: $red;
 }
 </style>
