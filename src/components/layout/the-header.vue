@@ -1,11 +1,11 @@
 <script setup lang="ts">
-const appTitle = "Fuel Consumption";
+import { StringResource } from "@/StringResource";
 </script>
 
 <template>
   <header class="row justify-content-center pt-2 pb-4">
     <div class="col-12">
-      <h1 class="header__title text-center">{{ appTitle }}</h1>
+      <h1 class="header__title text-center">{{ StringResource.appTitle }}</h1>
     </div>
   </header>
 </template>

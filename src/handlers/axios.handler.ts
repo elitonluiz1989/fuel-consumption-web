@@ -27,7 +27,11 @@ export class AxiosHandler {
     if (Array.isArray(errors) === false) return;
 
     const state = useState();
-    state.value.notifications = errors;
+
+    if (!Array.isArray(state.value.notifications))
+      state.value.notifications = [];
+
+    state.value.notifications.push(...errors);
   }
 
   private static getErrorMessage(error: AxiosError): string[] {

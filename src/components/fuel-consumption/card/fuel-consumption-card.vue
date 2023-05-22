@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineProps, ref } from "vue";
+import { computed, defineProps, onMounted, ref } from "vue";
 import { FuelConsumption } from "../fuel-consumption.model";
 import FuelConsumptionCardItem from "./fuel-consumption-card-item.vue";
 import FuelConsumptionCardAction from "./fuel-consumption-card-action.vue";
@@ -8,17 +8,17 @@ import { FuelConsumptionCardActionTypeEnum } from "./fuel-consumption-card-actio
 import {
   FuelConsumptionCardButtonActionType,
   FuelConsumptionCardFormActionType,
-  FuelConsumptionCardFormProps,
 } from "./fuel-consuption-card.types";
 import { FuelConsumptionApiService } from "../fuel-consumption-api.service";
 import { FuelConsumptionRecordHelper } from "./fuel-consumption-record.helper";
+import { StringResource } from "@/StringResource";
 
 type FuelConsumptionCardProps = {
   record: FuelConsumption;
 };
 
 const buttonBarVisible = ref(true);
-const formProps = ref<FuelConsumptionCardFormProps>();
+const buttonRunDisabled = ref(false);
 const formLabel = ref("");
 const formButtonText = ref("");
 const formAction = ref<FuelConsumptionCardFormActionType>();
@@ -29,30 +29,20 @@ const buttonBarStyles = computed(() => ({
   "d-flex justify-content-evenly fade show": buttonBarVisible.value,
   "d-flex justify-content-evenly fade": buttonBarVisible.value === false,
 }));
-
 const formStyles = computed(() => ({
   "fade show": buttonBarVisible.value === false,
   fade: buttonBarVisible.value,
 }));
 
+onMounted(() => validateIfPossibleRun());
+
+const validateIfPossibleRun = () =>
+  (buttonRunDisabled.value = props.record.refueledLiters <= 0);
 const buttonAction: FuelConsumptionCardButtonActionType = (
   action: FuelConsumptionCardActionTypeEnum
 ): void => {
-  if (action === FuelConsumptionCardActionTypeEnum.Fuel) {
-    formProps.value = FuelConsumptionRecordHelper.createFormProps(
-      FuelConsumptionCardActionTypeEnum.Fuel,
-      fuelAction,
-      closeAction
-    );
-  } else {
-    formProps.value = FuelConsumptionRecordHelper.createFormProps(
-      FuelConsumptionCardActionTypeEnum.Run,
-      runAction,
-      closeAction
-    );
-  }
-
-  buttonBarVisible.value = false;
+  configureFormPropsToFuel(action);
+  configureFormPropsToRun(action);
 };
 const closeAction = () => (buttonBarVisible.value = true);
 const fuelAction: FuelConsumptionCardFormActionType = async (
@@ -72,6 +62,8 @@ const fuelAction: FuelConsumptionCardFormActionType = async (
   FuelConsumptionRecordHelper.updateRecord(updatedRecord);
 
   buttonBarVisible.value = true;
+
+  validateIfPossibleRun();
 };
 const runAction: FuelConsumptionCardFormActionType = async (
   input: string
@@ -90,6 +82,34 @@ const runAction: FuelConsumptionCardFormActionType = async (
   FuelConsumptionRecordHelper.updateRecord(updatedRecord);
 
   buttonBarVisible.value = true;
+
+  validateIfPossibleRun();
+};
+const configureFormPropsToFuel = (
+  actionType: FuelConsumptionCardActionTypeEnum
+) => {
+  if (actionType !== FuelConsumptionCardActionTypeEnum.Fuel) return;
+
+  formLabel.value = StringResource.msgEnterWithTheNumberOfLiters(
+    StringResource.fuel
+  );
+  formButtonText.value = StringResource.fuel;
+  formAction.value = fuelAction;
+
+  buttonBarVisible.value = false;
+};
+const configureFormPropsToRun = (
+  actionType: FuelConsumptionCardActionTypeEnum
+) => {
+  if (actionType !== FuelConsumptionCardActionTypeEnum.Run) return;
+
+  formLabel.value = StringResource.msgEnterWithTheNumberOfLiters(
+    StringResource.run
+  );
+  formButtonText.value = StringResource.run;
+  formAction.value = runAction;
+
+  buttonBarVisible.value = false;
 };
 </script>
 
@@ -97,31 +117,31 @@ const runAction: FuelConsumptionCardFormActionType = async (
   <div class="card border-0 mt-2 p-3">
     <div class="d-flex justify-content-evenly mb-3">
       <FuelConsumptionCardItem
-        description="Serial Number"
+        :description="StringResource.serialNumber"
         :value="props.record.serialNumber"
       />
 
       <FuelConsumptionCardItem
-        description="Owner"
+        :description="StringResource.owner"
         :value="props.record.owner"
       />
     </div>
 
     <div class="d-flex mb-3">
       <FuelConsumptionCardItem
-        description="Capacity"
+        :description="StringResource.capacity"
         :value="props.record.capacity"
         :table-cell="true"
       />
 
       <FuelConsumptionCardItem
-        description="Refueled"
+        :description="StringResource.refueled"
         :value="props.record.refueledLiters"
         :table-cell="true"
       />
 
       <FuelConsumptionCardItem
-        description="Available"
+        :description="StringResource.available"
         :value="props.record.availableCapacity"
         :table-cell="true"
       />
@@ -129,16 +149,17 @@ const runAction: FuelConsumptionCardFormActionType = async (
 
     <div :class="buttonBarStyles" v-if="buttonBarVisible">
       <FuelConsumptionCardAction
-        description="Fuel"
+        :description="StringResource.fuel"
         :type="FuelConsumptionCardActionTypeEnum.Fuel"
         :action="buttonAction"
       />
 
       <FuelConsumptionCardAction
-        description="Run"
+        :description="StringResource.run"
         :type="FuelConsumptionCardActionTypeEnum.Run"
         :action="buttonAction"
         :close="closeAction"
+        :disabled="buttonRunDisabled"
       />
     </div>
 

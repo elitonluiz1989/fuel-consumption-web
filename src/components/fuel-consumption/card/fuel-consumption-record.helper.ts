@@ -1,36 +1,9 @@
 import { FuelConsumptionDto } from "../fuel-consumption.dto";
 import { FuelConsumption } from "../fuel-consumption.model";
 import { useState } from "@/state/state";
-import { FuelConsumptionCardActionTypeEnum } from "./fuel-consumption-card-action-type.enum";
-import {
-  FuelConsumptionCardFormActionType,
-  FuelConsumptionCardFormProps,
-} from "./fuel-consuption-card.types";
 
 export class FuelConsumptionRecordHelper {
   private static state = useState();
-
-  public static createFormProps(
-    actionType: FuelConsumptionCardActionTypeEnum,
-    action: FuelConsumptionCardFormActionType,
-    close: () => void
-  ): FuelConsumptionCardFormProps {
-    if (actionType === FuelConsumptionCardActionTypeEnum.Fuel) {
-      return {
-        label: "Enter with the number of liters to fuel",
-        buttonText: "Fuel",
-        action: action,
-        close: close,
-      };
-    }
-
-    return {
-      label: "Enter with the number of liters to run",
-      buttonText: "Run",
-      action: action,
-      close: close,
-    };
-  }
 
   public static createDto(
     serialNumber: number,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps } from "vue";
+import { defineProps, withDefaults } from "vue";
 import { FuelConsumptionCardButtonActionType } from "./fuel-consuption-card.types";
 import { FuelConsumptionCardActionTypeEnum } from "./fuel-consumption-card-action-type.enum";
 
@@ -7,13 +7,20 @@ type FuelConsumptionCardActionProps = {
   description: string;
   type: FuelConsumptionCardActionTypeEnum;
   action: FuelConsumptionCardButtonActionType;
+  disabled?: boolean;
 };
 
-const props = defineProps<FuelConsumptionCardActionProps>();
+const props = withDefaults(defineProps<FuelConsumptionCardActionProps>(), {
+  disabled: false,
+});
 </script>
 
 <template>
-  <button class="btn fw-bold" @click="props.action(props.type)">
+  <button
+    class="btn fw-bold"
+    @click="props.action(props.type)"
+    :disabled="disabled"
+  >
     {{ props.description }}
   </button>
 </template>

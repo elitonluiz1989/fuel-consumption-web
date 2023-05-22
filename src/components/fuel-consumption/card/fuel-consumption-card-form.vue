@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps, ref } from "vue";
 import { FuelConsumptionCardFormActionType } from "./fuel-consuption-card.types";
+import { StringResource } from "@/StringResource";
 
 type FuelConsumptionCardFormProps = {
   label: string;
@@ -53,7 +54,7 @@ const formClose = () => {
             class="btn close text-white border-white fw-bold"
             @click.prevent="formClose"
           >
-            Close
+            {{ StringResource.close }}
           </button>
         </div>
       </div>

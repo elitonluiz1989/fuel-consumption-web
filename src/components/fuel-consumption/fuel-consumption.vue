@@ -3,9 +3,9 @@ import { onMounted } from "vue";
 import { FuelConsumptionApiService } from "./fuel-consumption-api.service";
 import FuelConsumptionCard from "./card/fuel-consumption-card.vue";
 import { useState } from "@/state/state";
+import { StringResource } from "@/StringResource";
 
 const state = useState();
-const messagenoRecords = "No records.";
 
 onMounted(
   async () => (state.value.records = await FuelConsumptionApiService.list())
@@ -26,7 +26,9 @@ onMounted(
       </template>
 
       <div class="col-12" v-else>
-        <p class="text-center py-3">{{ messagenoRecords }}</p>
+        <p class="text-center py-3 rounded bg-white py-5">
+          {{ StringResource.msgNoRecords }}
+        </p>
       </div>
     </div>
   </div>
