@@ -1,4 +1,4 @@
-# Consum Combustível - WEB
+# Consumo Combustível - WEB
 
 Projeto desenvolvido utilizando Vue 3, com TypeScript e SCSS.
 
